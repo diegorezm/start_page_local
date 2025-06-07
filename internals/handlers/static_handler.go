@@ -1,14 +1,14 @@
 package handlers
 
 import (
-	"embed"
+	"io/fs"
 	"net/http"
 
 	"github.com/diegorezm/start_page/internals/web/static"
 )
 
 type StaticHandler struct {
-	files embed.FS
+	files fs.FS
 }
 
 func NewStaticHandler() *StaticHandler {
