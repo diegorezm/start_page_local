@@ -4,8 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "tailwind-watch": "npx @tailwindcss/cli -i ./src/input.css -o ./src/output.css --watch",
-    "tailwind-build": ""
+    "tailwind-watch": "npx @tailwindcss/cli -i ./internals/web/static/css/input.css -o ./internals/web/static/css/output.css --watch",
+    "tailwind-build": "npx @tailwindcss/cli -i ./internals/web/static/css/input.css -o ./internals/web/static/css/output.css --minify"
   },
   "devDependencies": {
     "@types/bun": "latest",
