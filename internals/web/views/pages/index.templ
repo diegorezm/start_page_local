@@ -4,5 +4,7 @@ import "github.com/diegorezm/start_page/internals/web/views/layouts"
 
 templ IndexPage() {
 	@layouts.MainLayout() {
+		<button x-data @click="alert('I\'ve been clicked!')">Click Me</button>
+		<script src="/static/js/output.js" defer></script>
 	}
 }
