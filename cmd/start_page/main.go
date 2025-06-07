@@ -9,6 +9,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/diegorezm/start_page/internals/handlers"
 	"github.com/diegorezm/start_page/internals/migrations"
 )
 
@@ -75,9 +76,7 @@ func main() {
 
 	flag.Parse()
 
-	mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("Hello, world!"))
-	})
+	handlers.RegisterAll(mux)
 
 	address := fmt.Sprintf(":%d", *port)
 
