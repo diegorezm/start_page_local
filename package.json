@@ -18,6 +18,7 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@imacrayon/alpine-ajax": "^0.12.2",
     "alpinejs": "^3.14.9"
   }
 }

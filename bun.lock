@@ -4,6 +4,7 @@
     "": {
       "name": "start_page",
       "dependencies": {
+        "@imacrayon/alpine-ajax": "^0.12.2",
         "alpinejs": "^3.14.9",
       },
       "devDependencies": {
@@ -44,6 +45,8 @@
     "@humanwhocodes/module-importer": ["@humanwhocodes/module-importer@1.0.1", "", {}, "sha512-bxveV4V8v5Yb4ncFTT3rPSgZBOpCkjfK0y4oVVVJwIuDVBRMDXrPyXRL988i5ap9m9bnyEEjWfm5WkBmtffLfA=="],
 
     "@humanwhocodes/retry": ["@humanwhocodes/retry@0.4.3", "", {}, "sha512-bV0Tgo9K4hfPCek+aMAn81RppFKv2ySDQeMoSZuvTASywNTnVJCArCZE2FWqpvIatKu7VMRLWlR1EazvVhDyhQ=="],
+
+    "@imacrayon/alpine-ajax": ["@imacrayon/alpine-ajax@0.12.2", "", {}, "sha512-X9U4wOgHcokUqSzTfad7TW33f4Vw/+VPZFTFzHzb2gO+57smtD8SrkTtaYdyZeEWwY0dyP5ZLhYfeOr5c9uPSw=="],
 
     "@types/bun": ["@types/bun@1.2.15", "", { "dependencies": { "bun-types": "1.2.15" } }, "sha512-U1ljPdBEphF0nw1MIk0hI7kPg7dFdPyM7EenHsp6W5loNHl7zqy6JQf/RKCgnUn2KDzUpkBwHPnEJEjII594bA=="],
 
