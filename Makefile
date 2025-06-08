@@ -18,8 +18,9 @@ build:
 	@go build -o $(BINARY_PATH) $(MAIN_PATH)
 	@chmod +x $(BINARY_PATH)
 
+
 run: build
-	@$(BINARY_PATH) # Use the BINARY_PATH variable
+	@$(BINARY_PATH) 
 
 server:
 	@air \
