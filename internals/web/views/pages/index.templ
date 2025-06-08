@@ -1,10 +1,68 @@
 package pages
 
 import "github.com/diegorezm/start_page/internals/web/views/layouts"
+import "github.com/diegorezm/start_page/internals/web/views/components/icons"
 
 templ IndexPage() {
 	@layouts.MainLayout() {
-		<button x-data @click="alert('I\'ve been clicked!')">Click Me</button>
+		<main class="p-4">
+			<nav id="navbar" class="w-full flex justify-between">
+				<div></div>
+				<div
+					class="flex flex-row items-center gap-2"
+					x-data="{currentTime: ''}"
+					x-init="
+          updateTime = () => {
+              const now = new Date();
+              const hours = String(now.getHours()).padStart(2, '0');
+              const minutes = String(now.getMinutes()).padStart(2, '0');
+              currentTime = `${hours}:${minutes}`;
+          };
+          updateTime();
+          setInterval(updateTime, 60 * 1000); 
+        "
+				>
+					@clockIcon()
+					<span class="text-lg text-center" x-text="currentTime">
+						12:24
+					</span>
+				</div>
+				<div>
+					<button class="hover:cursor-pointer">
+						@configIcon()
+					</button>
+				</div>
+			</nav>
+			<section id="main_content" class="flex flex-col max-w-5xl m-auto" x-data="{currentTab: 'bookmarks'}">
+				<div class="flex gap-2 items-center justify-center mt-8">
+					<button :class="currentTab === 'bookmarks' ? 'tab tab-active' : 'tab'" x-on:click="currentTab = 'bookmarks'">
+						Bookmarks
+					</button>
+					<button :class="currentTab === 'reminders' ? 'tab tab-active' : 'tab'" x-on:click="currentTab = 'reminders'">
+						Reminders
+					</button>
+				</div>
+				<div class="w-full rounded-b-lg bg-primary rounded-lg px-2 py-4">
+					<div x-show="currentTab === 'bookmarks'">
+						<h1>Bookmarks</h1>
+					</div>
+					<div x-show="currentTab === 'reminders'">
+						<h1>Reminders</h1>
+					</div>
+				</div>
+			</section>
+		</main>
 		<script src="/static/js/output.js" defer></script>
 	}
+}
+
+templ navigation() {
+}
+
+templ configIcon() {
+	@icons.Bolt()
+}
+
+templ clockIcon() {
+	@icons.Clock()
 }
