@@ -1,9 +1,10 @@
 package pages
 
 import "github.com/diegorezm/start_page/internals/web/views/layouts"
+import "github.com/diegorezm/start_page/internals/payloads"
 import "github.com/diegorezm/start_page/internals/web/views/components/icons"
 
-templ IndexPage() {
+templ IndexPage(sections []payloads.SectionWithItems) {
 	@layouts.MainLayout() {
 		<main class="p-4">
 			<nav id="navbar" class="w-full flex justify-between">
@@ -42,9 +43,18 @@ templ IndexPage() {
 						Reminders
 					</button>
 				</div>
-				<div class="w-full rounded-b-lg bg-primary rounded-lg px-2 py-4">
+				<div class="w-full rounded-b-lg bg-primary text-on-primary rounded-lg px-2 py-4">
 					<div x-show="currentTab === 'bookmarks'">
-						<h1>Bookmarks</h1>
+						<h1 class="text-black text-7xl">Bookmarks</h1>
+						<div>
+							if len(sections) == 0 {
+								<p>No section</p>
+							} else {
+								for _,section := range sections {
+									@bookmarkSection(section)
+								}
+							}
+						</div>
 					</div>
 					<div x-show="currentTab === 'reminders'">
 						<h1>Reminders</h1>
@@ -52,11 +62,17 @@ templ IndexPage() {
 				</div>
 			</section>
 		</main>
-		<script src="/static/js/output.js" defer></script>
+		<script src="/static/main.js" defer></script>
 	}
 }
 
-templ navigation() {
+templ bookmarkSection(section payloads.SectionWithItems) {
+	<h3>{ section.Section.Title }</h3>
+	<div class="flex flex-row flex-wrap gap-2">
+		for _,item := range section.Items {
+			<a href={ item.Url } class="btn btn-sm btn-primary">{ item.Title }</a>
+		}
+	</div>
 }
 
 templ configIcon() {
