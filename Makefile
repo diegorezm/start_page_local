@@ -9,7 +9,7 @@ DB_PATH=$(HOME_DIR)/.local/share/start_page/start_page.db # Removed duplicate
 GOOSE_DBSTRING=file:$(DB_PATH)?cache=shared
 GOOSE_MIGRATION_DIR=./migrations
 
-.PHONY: build run server tailwind templ dev clean migrate_up migrate_down migrate_create
+.PHONY: build run server tailwind-watch templ dev clean migrate_up migrate_down migrate_create
 
 # Default target
 all: run
@@ -17,7 +17,6 @@ all: run
 build:
 	@go build -o $(BINARY_PATH) $(MAIN_PATH)
 	@chmod +x $(BINARY_PATH)
-
 
 run: build
 	@$(BINARY_PATH) 
@@ -32,14 +31,17 @@ server:
 	--build.stop_on_error "false" \
 	--misc.clean_on_exit true
 
-tailwind:
-	@bun run tailwind-watch
+tailwind-watch:
+	@bunx @tailwindcss/cli -i ./internals/web/public/styles.css -o ./internals/web/static/styles.css --watch
+
+tailwind-build:
+	@bunx @tailwindcss/cli -i ./internals/web/public/styles.css -o ./internals/web/static/styles.css --minify
 
 templ:
 	@templ generate --watch --proxy="http://localhost:8090" --open-browser=false
 
 dev:
-	@make -j3 tailwind templ server
+	@GO_ENV=dev make -j3 tailwind-watch templ server
 
 clean:
 	@rm -f $(BINARY_PATH)
