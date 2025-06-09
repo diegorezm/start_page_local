@@ -19,6 +19,7 @@ func (h *SectionItemHandler) RegisterAll(mux *http.ServeMux) {
 
 	mux.HandleFunc("POST "+basePath, h.CreateSectionItem)
 	mux.HandleFunc("PUT "+basePath, h.UpdateSectionItem)
+	mux.HandleFunc("GET "+basePath+"/section/{id}", h.ListSectionItemBySection)
 	mux.HandleFunc("GET "+basePath+"/{id}", h.GetSectionItem)
 	mux.HandleFunc("DELETE "+basePath+"/{id}", h.DeleteSectionItem)
 }
@@ -83,8 +84,16 @@ func (h *SectionItemHandler) GetSectionItem(w http.ResponseWriter, r *http.Reque
 	writeJSON(w, http.StatusOK, sectionItem)
 }
 
-func (h *SectionItemHandler) ListSectionItem(w http.ResponseWriter, r *http.Request) {
-	sectionItems, err := h.db.ListSectionItemsBySection(r.Context(), 1)
+func (h *SectionItemHandler) ListSectionItemBySection(w http.ResponseWriter, r *http.Request) {
+	sectionId, err := idFromPath(r)
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	sectionItems, err := h.db.ListSectionItemsBySection(r.Context(), int64(sectionId))
+
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, "Failed to list section items")
 		return

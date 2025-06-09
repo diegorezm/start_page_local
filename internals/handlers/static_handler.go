@@ -9,24 +9,33 @@ import (
 )
 
 type StaticHandler struct {
-	files fs.FS
+	devFS  fs.FS
+	prodFS fs.FS
 }
 
 func NewStaticHandler() *StaticHandler {
+	subFS, err := fs.Sub(static.Embeded, "internals/web/static")
+	if err != nil {
+		panic("failed to create sub FS: " + err.Error())
+	}
+
 	return &StaticHandler{
-		files: static.Embeded,
+		devFS:  os.DirFS("internals/web/static"),
+		prodFS: subFS,
 	}
 }
 
 func (sh *StaticHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	var isDevelopment = os.Getenv("GO_ENV") != "production"
+	var useDev = os.Getenv("GO_ENV") != "production"
 
-	if isDevelopment {
-		sh.files = os.DirFS("internals/web/static")
+	var sourceFS fs.FS
+	if useDev {
+		sourceFS = sh.devFS
+	} else {
+		sourceFS = sh.prodFS
 	}
 
-	fs := http.FileServer(http.FS(sh.files))
-	http.StripPrefix("/static/", fs).ServeHTTP(w, r)
+	http.StripPrefix("/static/", http.FileServer(http.FS(sourceFS))).ServeHTTP(w, r)
 }
 
 func (sh *StaticHandler) RegisterAll(mux *http.ServeMux) {

@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/diegorezm/start_page/internals/payloads"
 	"github.com/diegorezm/start_page/internals/store"
 )
 
@@ -62,19 +63,40 @@ func (h *SectionHandler) GetSection(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, section)
 }
 
-// ListSections handles GET /api/sections to retrieve all sections.
 func (h *SectionHandler) ListSections(w http.ResponseWriter, r *http.Request) {
+	includeItems := r.URL.Query().Get("include_items") == "true"
+
 	sections, err := h.db.ListSections(context.Background())
+
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, "Failed to list sections")
 		log.Printf("ListSections: DB error: %v", err)
 		return
 	}
 
+	if includeItems {
+		sectionsWithItems := make([]payloads.SectionWithItems, len(sections))
+
+		for i, section := range sections {
+			items, err := h.db.ListSectionItemsBySection(context.Background(), section.ID)
+			if err != nil {
+				sendError(w, http.StatusInternalServerError, "Failed to list items for section")
+				log.Printf("ListSections: DB error when listing items: %v", err)
+				return
+			}
+
+			sectionsWithItems[i] = payloads.SectionWithItems{
+				Section: section,
+				Items:   items,
+			}
+		}
+		writeJSON(w, http.StatusOK, sectionsWithItems)
+		return
+	}
+
 	writeJSON(w, http.StatusOK, sections)
 }
 
-// UpdateSection handles PUT /api/sections/{id} to update an existing section.
 func (h *SectionHandler) UpdateSection(w http.ResponseWriter, r *http.Request) {
 	id, err := idFromPath(r)
 	if err != nil {
@@ -89,12 +111,10 @@ func (h *SectionHandler) UpdateSection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Ensure the ID from the path is used for the update operation
 	req.ID = int64(id)
 
 	section, err := h.db.UpdateSection(context.Background(), req)
 	if err != nil {
-		// Check for specific errors like not found or constraint violations
 		sendError(w, http.StatusInternalServerError, "Failed to update section")
 		log.Printf("UpdateSection: DB error: %v", err)
 		return
@@ -103,7 +123,6 @@ func (h *SectionHandler) UpdateSection(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, http.StatusOK, section)
 }
 
-// DeleteSection handles DELETE /api/sections/{id} to delete a section.
 func (h *SectionHandler) DeleteSection(w http.ResponseWriter, r *http.Request) {
 	id, err := idFromPath(r)
 	if err != nil {
@@ -111,7 +130,6 @@ func (h *SectionHandler) DeleteSection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// For DELETE :exec queries, sqlc's method returns error if any.
 	err = h.db.DeleteSection(context.Background(), int64(id))
 	if err != nil {
 		sendError(w, http.StatusInternalServerError, "Failed to delete section")
@@ -119,5 +137,5 @@ func (h *SectionHandler) DeleteSection(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.WriteHeader(http.StatusNoContent) // 204 No Content for successful deletion
+	w.WriteHeader(http.StatusNoContent)
 }
