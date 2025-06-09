@@ -6,13 +6,34 @@ import "github.com/diegorezm/start_page/internals/web/views/components/icons"
 
 templ IndexPage(sections []payloads.SectionWithItems) {
 	@layouts.MainLayout() {
-		<main class="p-4">
-			<nav id="navbar" class="w-full flex justify-between">
-				<div></div>
-				<div
-					class="flex flex-row items-center gap-2"
-					x-data="{currentTime: ''}"
-					x-init="
+		<div
+			class="h-full relative"
+			x-data="{
+      isConfigOpen: false,
+      setWallpaper(url) {
+			   this.$refs.wallpaper.style.backgroundImage = `url('${url}')`;
+         localStorage.setItem('wallpaper', url);
+		 }
+     }"
+			x-init="
+     const storedWallpaper = localStorage.getItem('wallpaper');
+     if (storedWallpaper && storedWallpaper !== '') {
+       setWallpaper(storedWallpaper);
+     }
+     "
+		>
+			<div
+				x-ref="wallpaper"
+				class="fixed inset-0 z-0 bg-cover bg-center blur-sm transition-all duration-500"
+				style="background-image: none;"
+			></div>
+			<main class="z-10 relative p-4">
+				<nav id="navbar" class="w-full flex justify-between">
+					<div></div>
+					<div
+						class="flex flex-row items-center gap-2"
+						x-data="{currentTime: ''}"
+						x-init="
           updateTime = () => {
               const now = new Date();
               const hours = String(now.getHours()).padStart(2, '0');
@@ -22,56 +43,98 @@ templ IndexPage(sections []payloads.SectionWithItems) {
           updateTime();
           setInterval(updateTime, 60 * 1000); 
         "
-				>
-					@clockIcon()
-					<span class="text-lg text-center" x-text="currentTime">
-						12:24
-					</span>
-				</div>
-				<div>
-					<button class="hover:cursor-pointer">
-						@configIcon()
-					</button>
-				</div>
-			</nav>
-			<section id="main_content" class="flex flex-col max-w-5xl m-auto" x-data="{currentTab: 'bookmarks'}">
-				<div class="flex gap-2 items-center justify-center mt-8">
-					<button :class="currentTab === 'bookmarks' ? 'tab tab-active' : 'tab'" x-on:click="currentTab = 'bookmarks'">
-						Bookmarks
-					</button>
-					<button :class="currentTab === 'reminders' ? 'tab tab-active' : 'tab'" x-on:click="currentTab = 'reminders'">
-						Reminders
-					</button>
-				</div>
-				<div class="w-full rounded-b-lg bg-primary text-on-primary rounded-lg px-2 py-4">
-					<div x-show="currentTab === 'bookmarks'">
-						<h1 class="text-black text-7xl">Bookmarks</h1>
-						<div>
-							if len(sections) == 0 {
-								<p>No section</p>
-							} else {
-								for _,section := range sections {
-									@bookmarkSection(section)
+					>
+						@clockIcon()
+						<span class="text-lg text-center" x-text="currentTime">
+							12:24
+						</span>
+					</div>
+					<div>
+						<button class="hover:cursor-pointer" @click="isConfigOpen = !isConfigOpen">
+							@configIcon()
+						</button>
+					</div>
+				</nav>
+				<section id="main_content" class="flex flex-col max-w-5xl m-auto" x-data="{currentTab: 'bookmarks'}">
+					<div class="flex gap-2 items-center justify-center mt-8">
+						<button :class="currentTab === 'bookmarks' ? 'tab tab-active' : 'tab'" x-on:click="currentTab = 'bookmarks'">
+							Bookmarks
+						</button>
+						<button :class="currentTab === 'reminders' ? 'tab tab-active' : 'tab'" x-on:click="currentTab = 'reminders'">
+							Reminders
+						</button>
+					</div>
+					<div class="w-full rounded-b-lg bg-primary text-on-primary rounded-lg px-2 py-4">
+						<div x-show="currentTab === 'bookmarks'">
+							<div class="flex justify-center gap-10">
+								if len(sections) == 0 {
+									<p>No section</p>
+								} else {
+									for _,section := range sections {
+										@bookmarkSection(section)
+									}
 								}
-							}
+							</div>
+						</div>
+						<div x-show="currentTab === 'reminders'">
+							<h1>Reminders</h1>
 						</div>
 					</div>
-					<div x-show="currentTab === 'reminders'">
-						<h1>Reminders</h1>
-					</div>
-				</div>
-			</section>
-		</main>
+				</section>
+			</main>
+			@configSidebar()
+		</div>
 		<script src="/static/main.js" defer></script>
 	}
 }
 
+templ configSidebar() {
+	<!-- Overlay -->
+	<div
+		x-show="isConfigOpen"
+		x-transition:enter="transition ease-out duration-300"
+		x-transition:enter-start="opacity-0"
+		x-transition:enter-end="opacity-80"
+		x-transition:leave="transition ease-in duration-200"
+		x-transition:leave-start="opacity-80"
+		x-transition:leave-end="opacity-0"
+		@click="isConfigOpen = false"
+		class="fixed inset-0 bg-black opacity-80 z-40"
+	></div>
+	<!-- Sidebar -->
+	<div
+		x-show="isConfigOpen"
+		x-transition:enter="transition transform ease-out duration-300"
+		x-transition:enter-start="translate-x-full opacity-0"
+		x-transition:enter-end="translate-x-0 opacity-100"
+		x-transition:leave="transition transform ease-in duration-200"
+		x-transition:leave-start="translate-x-0 opacity-100"
+		x-transition:leave-end="translate-x-full opacity-0"
+		class="fixed top-0 right-0 h-full w-96 bg-background text-foreground shadow-lg z-50 p-4 overflow-y-auto"
+	>
+		<h2 class="text-xl font-bold mb-4">Settings</h2>
+		<div class="flex flex-col gap-2">
+			<button
+				class="btn btn-sm btn-outline"
+				@click="setWallpaper('https://raw.githubusercontent.com/diegorezm/dotfiles/refs/heads/main/wallpapers/aaaa.jpg')"
+			>
+				Wallpaper 1
+			</button>
+			<button class="btn btn-sm btn-outline" @click="setWallpaper('')">
+				Remove Wallpaper
+			</button>
+		</div>
+	</div>
+}
+
 templ bookmarkSection(section payloads.SectionWithItems) {
-	<h3>{ section.Section.Title }</h3>
-	<div class="flex flex-row flex-wrap gap-2">
-		for _,item := range section.Items {
-			<a href={ item.Url } class="btn btn-sm btn-primary">{ item.Title }</a>
-		}
+	<div class="flex flex-col items-center justify-center">
+		<h1 class="text-2xl text-center uppercase">{ section.Section.Title }</h1>
+		<div class="flex flex-col gap-2">
+			for _,item := range section.Items {
+				<a href="https://github.com" target="_blank" class="btn btn-sm btn-primary text-lg">{ item.Title }</a>
+			}
+		</div>
 	</div>
 }
 
