@@ -6,7 +6,7 @@
     --foreground: #586e75;
 
     --primary: #073642;
-    --on-primary: #586e75;
+    --on-primary: #eee8d5;
 
     --secondary: #2aa198;
     --on-secondary: #eee8d5;
@@ -24,10 +24,10 @@
       --background: #16130f;
       --foreground: #a39a90;
 
-      --primary: #6d5782;
+      --primary: #6d8257;
       --on-primary: #dbd6d1;
 
-      --secondary: #6d8257;
+      --secondary: #6d5782;
       --on-secondary: #16130f;
 
       --tertiary: #576d82;
@@ -136,7 +136,7 @@
   }
 
   .tab {
-    @apply p-2 rounded-t-lg hover:bg-primary hover:text-on-primary hover:opacity-90 hover:cursor-pointer transition-colors duration-300 bg-surface text-on-surface;
+    @apply p-2 rounded-t-lg hover:bg-primary hover:text-on-primary hover:cursor-pointer transition-colors duration-300 bg-surface text-on-surface;
   }
 
   .tab-active {
