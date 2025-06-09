@@ -66,11 +66,21 @@ func main() {
 	defer db.Close()
 
 	shouldMigrate := flag.Bool("migrate", false, "should migrate the database")
+	shouldClean := flag.Bool("clean", false, "should migrate the database")
 
 	flag.Parse()
 
+	m := migrations.NewMigrations(db)
+	migrations.RegisterAll(m)
+
+	if *shouldClean == true {
+		migrateDOWN(m)
+		migrateUP(m)
+		return
+	}
+
 	if *shouldMigrate == true {
-		migrate(db)
+		migrateUP(m)
 		return
 	}
 
@@ -96,13 +106,16 @@ func main() {
 	log.Fatal(server.ListenAndServe())
 }
 
-func migrate(db *sql.DB) {
-	fmt.Printf("Migration started!\n")
-	m := migrations.NewMigrations(db)
-	migrations.RegisterAll(m)
+func migrateUP(m *migrations.Migrations) {
 	err := m.Up()
 	if err != nil {
 		log.Fatalf("Error while migrating: %s", err.Error())
 	}
-	fmt.Printf("Migration finished!\n")
+}
+
+func migrateDOWN(m *migrations.Migrations) {
+	err := m.Down()
+	if err != nil {
+		log.Fatalf("Error while cleaning the db: %s", err.Error())
+	}
 }
