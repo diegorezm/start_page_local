@@ -1,6 +1,8 @@
 package migrations
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 func RegisterAll(m *Migrations) {
 	m.Register(Migration{
