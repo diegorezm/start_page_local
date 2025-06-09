@@ -36,8 +36,8 @@ RETURNING id, title, position
 `
 
 type CreateSectionParams struct {
-	Title    string
-	Position int64
+	Title    string `json:"title"`
+	Position int64  `json:"position"`
 }
 
 func (q *Queries) CreateSection(ctx context.Context, arg CreateSectionParams) (StartPageSection, error) {
@@ -55,9 +55,9 @@ RETURNING id, title, url, section_id
 `
 
 type CreateSectionItemParams struct {
-	Title     string
-	Url       string
-	SectionID int64
+	Title     string `json:"title"`
+	Url       string `json:"url"`
+	SectionID int64  `json:"section_id"`
 }
 
 // -
@@ -127,8 +127,8 @@ ORDER BY created_at DESC
 `
 
 type GetRemindersBetweenDatesParams struct {
-	Date   interface{}
-	Date_2 interface{}
+	Date   interface{} `json:"date"`
+	Date_2 interface{} `json:"date_2"`
 }
 
 func (q *Queries) GetRemindersBetweenDates(ctx context.Context, arg GetRemindersBetweenDatesParams) ([]StartPageReminder, error) {
@@ -166,8 +166,8 @@ ORDER BY created_at DESC
 `
 
 type GetRemindersForDateParams struct {
-	Date   interface{}
-	Date_2 interface{}
+	Date   interface{} `json:"date"`
+	Date_2 interface{} `json:"date_2"`
 }
 
 func (q *Queries) GetRemindersForDate(ctx context.Context, arg GetRemindersForDateParams) ([]StartPageReminder, error) {
@@ -364,9 +364,9 @@ RETURNING id, text, completed, created_at
 `
 
 type UpdateReminderParams struct {
-	Text      string
-	Completed bool
-	ID        int64
+	Text      string `json:"text"`
+	Completed bool   `json:"completed"`
+	ID        int64  `json:"id"`
 }
 
 func (q *Queries) UpdateReminder(ctx context.Context, arg UpdateReminderParams) (StartPageReminder, error) {
@@ -389,9 +389,9 @@ RETURNING id, title, position
 `
 
 type UpdateSectionParams struct {
-	Title    string
-	Position int64
-	ID       int64
+	Title    string `json:"title"`
+	Position int64  `json:"position"`
+	ID       int64  `json:"id"`
 }
 
 func (q *Queries) UpdateSection(ctx context.Context, arg UpdateSectionParams) (StartPageSection, error) {
@@ -409,10 +409,10 @@ RETURNING id, title, url, section_id
 `
 
 type UpdateSectionItemParams struct {
-	Title     string
-	Url       string
-	SectionID int64
-	ID        int64
+	Title     string `json:"title"`
+	Url       string `json:"url"`
+	SectionID int64  `json:"section_id"`
+	ID        int64  `json:"id"`
 }
 
 func (q *Queries) UpdateSectionItem(ctx context.Context, arg UpdateSectionItemParams) (StartPageSectionItem, error) {

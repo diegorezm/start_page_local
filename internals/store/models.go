@@ -9,21 +9,21 @@ import (
 )
 
 type StartPageReminder struct {
-	ID        int64
-	Text      string
-	Completed bool
-	CreatedAt time.Time
+	ID        int64     `json:"id"`
+	Text      string    `json:"text"`
+	Completed bool      `json:"completed"`
+	CreatedAt time.Time `json:"created_at"`
 }
 
 type StartPageSection struct {
-	ID       int64
-	Title    string
-	Position int64
+	ID       int64  `json:"id"`
+	Title    string `json:"title"`
+	Position int64  `json:"position"`
 }
 
 type StartPageSectionItem struct {
-	ID        int64
-	Title     string
-	Url       string
-	SectionID int64
+	ID        int64  `json:"id"`
+	Title     string `json:"title"`
+	Url       string `json:"url"`
+	SectionID int64  `json:"section_id"`
 }
