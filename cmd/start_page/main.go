@@ -9,6 +9,8 @@ import (
 	"os"
 	"path/filepath"
 
+	_ "github.com/mattn/go-sqlite3"
+
 	"github.com/diegorezm/start_page/internals/handlers"
 	"github.com/diegorezm/start_page/internals/migrations"
 	"github.com/diegorezm/start_page/internals/store"
@@ -33,18 +35,18 @@ func createDB() (*sql.DB, error) {
 			return nil, fmt.Errorf("failed to create directory: %w", err)
 		}
 
-		if _, err := os.Create(filepath.Join(pathDir, "reminder.db")); err != nil {
+		if _, err := os.Create(filepath.Join(pathDir, "start_page.db")); err != nil {
 			return nil, fmt.Errorf("failed to create database: %w", err)
 		}
 	}
 
-	dbPath := filepath.Join(pathDir, "reminder.db")
+	dbPath := filepath.Join(pathDir, "start_page.db")
 	_, err := os.Stat(dbPath)
 
 	// check if the file exists
 	if os.IsNotExist(err) {
 		fmt.Println("Creating database...")
-		if _, err := os.Create(filepath.Join(pathDir, "reminder.db")); err != nil {
+		if _, err := os.Create(filepath.Join(pathDir, "start_page.db")); err != nil {
 			return nil, fmt.Errorf("failed to create database: %w", err)
 		}
 	}
@@ -63,12 +65,13 @@ func main() {
 
 	defer db.Close()
 
-	m := migrations.NewMigrations(db)
-
 	shouldMigrate := flag.Bool("migrate", false, "should migrate the database")
 
+	flag.Parse()
+
 	if *shouldMigrate == true {
-		migrations.RegisterAll(m)
+		migrate(db)
+		return
 	}
 
 	mux := http.NewServeMux()
@@ -77,7 +80,9 @@ func main() {
 
 	flag.Parse()
 
-	handlers.RegisterAll(mux)
+	s := store.New(db)
+
+	handlers.RegisterAll(mux, s)
 
 	address := fmt.Sprintf(":%d", *port)
 
@@ -89,4 +94,15 @@ func main() {
 	fmt.Printf("Serving on http://localhost%s\n", address)
 
 	log.Fatal(server.ListenAndServe())
+}
+
+func migrate(db *sql.DB) {
+	fmt.Printf("Migration started!\n")
+	m := migrations.NewMigrations(db)
+	migrations.RegisterAll(m)
+	err := m.Up()
+	if err != nil {
+		log.Fatalf("Error while migrating: %s", err.Error())
+	}
+	fmt.Printf("Migration finished!\n")
 }
