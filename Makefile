@@ -31,18 +31,6 @@ server:
 	--build.stop_on_error "false" \
 	--misc.clean_on_exit true
 
-tailwind-watch:
-	@bunx @tailwindcss/cli -i ./internals/web/public/styles.css -o ./internals/web/static/styles.css --watch
-
-tailwind-build:
-	@bunx @tailwindcss/cli -i ./internals/web/public/styles.css -o ./internals/web/static/styles.css --minify
-
-templ:
-	@templ generate --watch --proxy="http://localhost:8090" --open-browser=false
-
-dev:
-	@GO_ENV=dev make -j3 tailwind-watch templ server
-
 clean:
 	@rm -f $(BINARY_PATH)
 	@rm -rf $(dir $(DB_PATH)) 
