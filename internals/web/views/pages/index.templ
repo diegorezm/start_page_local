@@ -3,6 +3,7 @@ package pages
 import "github.com/diegorezm/start_page/internals/web/views/layouts"
 import "github.com/diegorezm/start_page/internals/payloads"
 import "github.com/diegorezm/start_page/internals/web/views/components/icons"
+import "github.com/diegorezm/start_page/internals/web/views/components/sidebar"
 
 templ IndexPage(sections []payloads.SectionWithItems) {
 	@layouts.MainLayout() {
@@ -10,15 +11,35 @@ templ IndexPage(sections []payloads.SectionWithItems) {
 			class="h-full relative"
 			x-data="{
       isConfigOpen: false,
+      editMode: false,
+      currentWallpaper: '',
+      currentTheme: '',
       setWallpaper(url) {
+        if (url === 'none') {
+          this.$refs.wallpaper.style.backgroundImage = 'none';
+          localStorage.removeItem('wallpaper');
+          currentWallpaper = ''
+        } else {
 			   this.$refs.wallpaper.style.backgroundImage = `url('${url}')`;
          localStorage.setItem('wallpaper', url);
-		 }
+         currentWallpaper = url
+        }
+		 },
+     setTheme(theme) {
+      localStorage.setItem('theme', theme);
+      document.documentElement.setAttribute('data-theme', theme)
+      currentTheme = theme
+     },
      }"
 			x-init="
      const storedWallpaper = localStorage.getItem('wallpaper');
      if (storedWallpaper && storedWallpaper !== '') {
        setWallpaper(storedWallpaper);
+       currentWallpaper = storedWallpaper
+     }
+     const storedTheme = localStorage.getItem('theme')
+     if(storedTheme){
+      setTheme(storedTheme)
      }
      "
 		>
@@ -45,7 +66,7 @@ templ IndexPage(sections []payloads.SectionWithItems) {
         "
 					>
 						@clockIcon()
-						<span class="text-lg text-center" x-text="currentTime">
+						<span class="text-2xl text-center text-primary" x-text="currentTime">
 							12:24
 						</span>
 					</div>
@@ -64,9 +85,12 @@ templ IndexPage(sections []payloads.SectionWithItems) {
 							Reminders
 						</button>
 					</div>
-					<div class="w-full rounded-b-lg bg-primary text-on-primary rounded-lg px-2 py-4">
+					<div
+						class="w-full rounded-b-lg border-2 border-primary text-foreground rounded-lg px-2 py-4 shadow-sm shadow-primary transition-all duration-300"
+						:class="currentWallpaper !== '' && 'bg-primary text-on-primary'"
+					>
 						<div x-show="currentTab === 'bookmarks'">
-							<div class="flex justify-center gap-10">
+							<div class="flex justify-center gap-10 flex-wrap">
 								if len(sections) == 0 {
 									<p>No section</p>
 								} else {
@@ -89,59 +113,149 @@ templ IndexPage(sections []payloads.SectionWithItems) {
 }
 
 templ configSidebar() {
-	<!-- Overlay -->
-	<div
-		x-show="isConfigOpen"
-		x-transition:enter="transition ease-out duration-300"
-		x-transition:enter-start="opacity-0"
-		x-transition:enter-end="opacity-80"
-		x-transition:leave="transition ease-in duration-200"
-		x-transition:leave-start="opacity-80"
-		x-transition:leave-end="opacity-0"
-		@click="isConfigOpen = false"
-		class="fixed inset-0 bg-black opacity-80 z-40"
-	></div>
-	<!-- Sidebar -->
-	<div
-		x-show="isConfigOpen"
-		x-transition:enter="transition transform ease-out duration-300"
-		x-transition:enter-start="translate-x-full opacity-0"
-		x-transition:enter-end="translate-x-0 opacity-100"
-		x-transition:leave="transition transform ease-in duration-200"
-		x-transition:leave-start="translate-x-0 opacity-100"
-		x-transition:leave-end="translate-x-full opacity-0"
-		class="fixed top-0 right-0 h-full w-96 bg-background text-foreground shadow-lg z-50 p-4 overflow-y-auto"
-	>
-		<h2 class="text-xl font-bold mb-4">Settings</h2>
-		<div class="flex flex-col gap-2">
-			<button
-				class="btn btn-sm btn-outline"
-				@click="setWallpaper('https://raw.githubusercontent.com/diegorezm/dotfiles/refs/heads/main/wallpapers/aaaa.jpg')"
-			>
-				Wallpaper 1
-			</button>
-			<button class="btn btn-sm btn-outline" @click="setWallpaper('')">
-				Remove Wallpaper
-			</button>
+	@sidebar.Sidebar(sidebar.Props{
+		Title: "Config",
+		XShow: "isConfigOpen",
+	}) {
+		<div
+			x-data="{
+        wallpaperInput: '',
+          applyWallpaper() {
+          if (this.wallpaperInput.trim() !== '') {
+            setWallpaper(this.wallpaperInput);
+          }
+        },
+        handleFileUpload(event) {
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              setWallpaper(e.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        }
+    }"
+			class="flex flex-col gap-4"
+		>
+			<h1 class="text-md">Wallpaper</h1>
+			<!-- Input with file button -->
+			<div class="relative">
+				<input
+					type="url"
+					placeholder="Enter wallpaper URL or use file picker"
+					class="input w-full pr-24"
+					x-model="wallpaperInput"
+				/>
+				<!-- Hidden file input -->
+				<input type="file" accept="image/*" class="hidden" @change="handleFileUpload" x-ref="fileInput"/>
+				<!-- File picker button -->
+				<button type="button" class="absolute top-1/2 right-2 -translate-y-1/2 btn btn-sm" @click="$refs.fileInput.click()">
+					@fileIcon()
+				</button>
+			</div>
+			<!-- Action buttons -->
+			<div class="flex gap-2">
+				<button class="btn btn-sm btn-primary" @click="applyWallpaper()">Send</button>
+				<button class="btn btn-sm btn-outline" @click="setWallpaper('none')">Delete</button>
+			</div>
 		</div>
-	</div>
+		<hr class="mt-6 mb-6"/>
+		<div class="flex flex-col gap-4" x-data="{selected: currentTheme}">
+			<h1 class="text-md">Themes</h1>
+			<select name="theme" x-model="selected" @change="setTheme(selected)" class="input hover:cursor-pointer">
+				<option value="" disabled>Select A Colorscheme</option>
+				<option value="default">Default</option>
+				<option value="moonfly">Moonfly</option>
+				<option value="ember-dark">Ember Dark</option>
+			</select>
+		</div>
+		<hr class="mt-6 mb-6"/>
+		<div class="flex flex-col gap-4">
+			<h1 class="text-md">Edit Mode</h1>
+			<input type="checkbox" class="bg-transparent border-primary border p-2 hover:cursor-pointer" x-model="editMode"/>
+		</div>
+		<hr class="mt-6 mb-6"/>
+		<div class="flex flex-col gap-4">
+			<h1 class="text-md">New section</h1>
+			<form
+				x-data="createSectionForm()"
+				class="flex flex-col gap-2"
+				id="create_section_form"
+				method="post"
+				@submit.prevent="onSubmit"
+			>
+				<input type="text" name="title" placeholder="Section title" class="input" x-model="formData.title"/>
+				<input type="number" name="position" placeholder="Position" x-model="formData.position" hidden/>
+				<div>
+					<button class="btn btn-sm btn-primary">Create</button>
+				</div>
+			</form>
+			<script>
+    function createSectionForm() {
+      return {
+        formData: {
+          title: "",
+          position: 0
+        },
+        onSubmit() {
+          fetch("/api/sections", {
+            method: "POST",
+            body: JSON.stringify(this.formData)
+          })
+            .then(e => {
+              this.formData.title = "";
+              this.formData.position = 0;
+              window.location.reload();
+            })
+            .catch(e => console.error(e))
+        }
+      }
+    }
+  </script>
+		</div>
+	}
 }
 
 templ bookmarkSection(section payloads.SectionWithItems) {
 	<div class="flex flex-col items-center justify-center">
-		<h1 class="text-2xl text-center uppercase">{ section.Section.Title }</h1>
-		<div class="flex flex-col gap-2">
+		<h1 class="text-2xl text-center uppercase font-bold">{ section.Section.Title }</h1>
+		<div class="flex flex-row gap-2 items-center justify-center" x-show="editMode">
+			<button class="hover:cursor-pointer">
+				@icons.Plus(icons.Props{
+					Size: 16,
+				})
+			</button>
+			<button class="hover:cursor-pointer">
+				@icons.Trash(icons.Props{
+					Size: 16,
+				})
+			</button>
+		</div>
+		<div class="flex flex-col">
 			for _,item := range section.Items {
-				<a href="https://github.com" target="_blank" class="btn btn-sm btn-primary text-lg">{ item.Title }</a>
+				<a href={ item.Url } target="_blank" class="hover:text-secondary text-lg py-2">
+					{ item.Title }
+				</a>
 			}
 		</div>
 	</div>
 }
 
 templ configIcon() {
-	@icons.Bolt()
+	@icons.Bolt(icons.Props{
+		Color: "var(--primary)",
+	})
+}
+
+templ fileIcon() {
+	@icons.File(icons.Props{
+		Size: 20,
+	})
 }
 
 templ clockIcon() {
-	@icons.Clock()
+	@icons.Clock(icons.Props{
+		Color: "var(--primary)",
+	})
 }
