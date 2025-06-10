@@ -7,9 +7,6 @@ import (
 )
 
 func RegisterAll(mux *http.ServeMux, s *store.Queries) {
-	staticHandler := NewStaticHandler()
-	staticHandler.RegisterAll(mux)
-
 	pagesHandler := NewPagesHandler(s)
 	pagesHandler.RegisterAll(mux)
 
