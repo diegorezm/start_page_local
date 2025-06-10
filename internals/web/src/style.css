@@ -1,79 +1,90 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@import "tailwindcss";
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-}
-
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
-
-.card {
-  padding: 2em;
-}
-
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-}
-
-@media (prefers-color-scheme: light) {
+@layer base {
   :root {
-    color: #213547;
-    background-color: #ffffff;
+    --background: #eee8d5;
+    --foreground: #586e75;
+
+    --primary: #073642;
+    --on-primary: #eee8d5;
+
+    --secondary: #2aa198;
+    --on-secondary: #eee8d5;
+
+    --tertiary: #268bd2;
+    --on-tertiary: #fdf6e3;
+
+    --surface: #fdf6e3;
+    --on-surface: #586e75;
+
+    --error: #dc322f;
+    --on-error: #000000;
+
+    &[data-theme="ember-dark"] {
+      --background: #16130f;
+      --foreground: #a39a90;
+
+      --primary: #6d8257;
+      --on-primary: #dbd6d1;
+
+      --secondary: #6d5782;
+      --on-secondary: #16130f;
+
+      --tertiary: #576d82;
+      --on-tertiary: #a39a90;
+
+      --surface: #dbd6d1;
+      --on-surface: #16130f;
+
+      --error: #dc322f;
+      --on-error: #000000;
+    }
+
+    &[data-theme="moonfly"] {
+      --background: #080808;
+      --foreground: #bdbdbd;
+
+      --primary: #323437;
+      --on-primary: #bdbdbd;
+
+      --secondary: #8f3f71;
+      --on-secondary: #bdbdbd;
+
+      --tertiary: #cf87e8;
+      --on-tertiary: #eee8d5;
+
+      --surface: #949494;
+      --on-surface: #080808;
+
+      --error: #ff5d5d;
+      --on-error: #000000;
+    }
   }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+}
+
+html,
+body {
+  font-family:
+    "Titillium Web",
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    Oxygen,
+    Ubuntu,
+    Cantarell,
+    "Open Sans",
+    "Helvetica Neue",
+    sans-serif;
+  background-color: var(--background);
+  color: var(--foreground);
+  font-size: 16px;
+  font-optical-sizing: auto;
+  line-height: 1.5;
+  font-weight: 500;
+  font-style: normal;
+  scrollbar-color: var(--foreground) var(--background);
+  scrollbar-width: thin;
+  scroll-behavior: smooth;
 }
