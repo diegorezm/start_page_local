@@ -1,2 +1,2 @@
-!./components/icons/**/*.go
+!components/icons/**/*.go
 *.go

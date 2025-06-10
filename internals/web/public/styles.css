@@ -53,8 +53,8 @@
       --tertiary: #cf87e8;
       --on-tertiary: #eee8d5;
 
-      --surface: #323437;
-      --on-surface: #e4e4e4;
+      --surface: #949494;
+      --on-surface: #080808;
 
       --error: #ff5d5d;
       --on-error: #000000;
@@ -128,8 +128,9 @@
   }
 
   .input {
-    @apply px-4 py-2 rounded-lg bg-[var(--surface)] text-[var(--on-surface)] placeholder-gray-400 outline-none border border-transparent focus:border-[var(--tertiary)] transition duration-200;
+    @apply px-4 py-2 rounded-lg bg-transparent text-foreground placeholder-gray-400 outline-none border border-primary focus:border-tertiary transition duration-200;
   }
+
 
   .card {
     @apply p-6 rounded-xl bg-[var(--surface)] text-[var(--on-surface)] shadow-md;
