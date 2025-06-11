@@ -1,35 +1,26 @@
-import { defineStore } from "pinia";
+import { create } from "zustand";
+import { persist, createJSONStorage } from 'zustand/middleware'
 
-interface IUserConfigStoreState {
-  theme: string | undefined;
-  wallpaper: string | undefined;
+interface IUserConfigStore {
+  theme: string | null;
+  wallpaper: string | null;
+
+  setTheme(theme: string | null): void;
+  setWallpaper(theme: string | null): void;
 }
 
-const STORAGE_NAME = "user_config_store"
 
-const defaultUserConfigStoreState: IUserConfigStoreState = {
-  theme: undefined,
-  wallpaper: undefined,
-};
-
-export const useUserConfigStore = defineStore(STORAGE_NAME, {
-  state: (): IUserConfigStoreState => ({
-    ...defaultUserConfigStoreState,
-  }),
-
-  actions: {
-    setTheme(theme: string) {
-      this.theme = theme;
+export const useUserConfigStore = create<IUserConfigStore>()(
+  persist(
+    (set, _get) => ({
+      theme: null,
+      wallpaper: null,
+      setTheme: (theme) => set(s => ({ ...s, theme })),
+      setWallpaper: (wallpaper) => set(s => ({ ...s, wallpaper }))
+    }),
+    {
+      name: 'user_config_store',
+      storage: createJSONStorage(() => sessionStorage),
     },
-    setWallpaper(wallpaper: string) {
-      this.wallpaper = wallpaper;
-    },
-    resetTheme() {
-      this.theme = undefined;
-    },
-    resetWallpaper() {
-      this.wallpaper = undefined;
-    },
-  },
-  persist: true
-});
+  ),
+)

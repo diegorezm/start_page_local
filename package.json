@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "lucide-react": "^0.514.0",
+    "zustand": "^5.0.5"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.7",
+    "@types/react-dom": "^19.1.6"
+  }
+}
