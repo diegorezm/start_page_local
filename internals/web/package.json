@@ -1,11 +1,13 @@
 {
   "name": "web",
-  "module": "index.ts",
+  "module": "src/main.tsx",
+  "main": "src/main.tsx",
   "type": "module",
   "private": true,
   "scripts": {
     "dev": "bun index.html",
-    "build": "bun build index.html --outdir ./dist --target browser --minify"
+    "build": "bun build index.html --outdir ./dist --target browser --minify --external=react,react-dom",
+    "start": "NODE_ENV=production bun dist/index.html"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
@@ -23,8 +25,15 @@
     "typescript": "^5"
   },
   "dependencies": {
+    "@fontsource/titillium-web": "^5.2.6",
+    "@headlessui/react": "^2.2.4",
+    "@tanstack/react-query": "4",
+    "axios": "^1.9.0",
+    "clsx": "^2.1.1",
+    "lucide-react": "^0.514.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.5"
   }
 }
