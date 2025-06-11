@@ -1,7 +1,9 @@
 import { Bolt, Clock } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useOpenConfigSidebar } from "src/store/use-open-config-sidebar";
 
 export function Navbar() {
+  const { onOpen } = useOpenConfigSidebar()
   const [clock, setClock] = useState(new Date());
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export function Navbar() {
         </span>
       </div>
       <div>
-        <button className="hover:cursor-pointer">
+        <button className="hover:cursor-pointer" onClick={onOpen}>
           <Bolt />
         </button>
       </div>
