@@ -1,25 +1,31 @@
 import "./styles.css"
-import "@fontsource/titillium-web"
+import '@fontsource/titillium-web/400.css';
+import '@fontsource/titillium-web/600.css';
+import '@fontsource/titillium-web/700.css';
 
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
-import { App } from "./app";
+
+
 import { QueryProvider } from "./providers/query-provider";
+import { DialogProviders } from "./providers/dialog-providers";
+
+import { App } from "./app";
 
 const elem = document.getElementById("root")!;
+
+if (!elem) {
+  throw new Error("Please define a 'root' element.")
+}
+
 const app = (
   <StrictMode>
     <QueryProvider>
       <App />
+      <DialogProviders />
     </QueryProvider>
   </StrictMode>
 );
 
-if (import.meta.hot) {
-  // With hot module reloading, `import.meta.hot.data` is persisted.
-  const root = (import.meta.hot.data.root ??= createRoot(elem));
-  root.render(app);
-} else {
-  // The hot module reloading API is not available in production.
-  createRoot(elem).render(app);
-}
+createRoot(elem).render(app);
+

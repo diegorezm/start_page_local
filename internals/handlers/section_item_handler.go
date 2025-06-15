@@ -18,7 +18,7 @@ func (h *SectionItemHandler) RegisterAll(mux *http.ServeMux) {
 	basePath := "/api/section_items"
 
 	mux.HandleFunc("POST "+basePath, h.CreateSectionItem)
-	mux.HandleFunc("PUT "+basePath, h.UpdateSectionItem)
+	mux.HandleFunc("PUT "+basePath+"/{id}", h.UpdateSectionItem)
 	mux.HandleFunc("GET "+basePath+"/section/{id}", h.ListSectionItemBySection)
 	mux.HandleFunc("GET "+basePath+"/{id}", h.GetSectionItem)
 	mux.HandleFunc("DELETE "+basePath+"/{id}", h.DeleteSectionItem)
@@ -101,4 +101,21 @@ func (h *SectionItemHandler) ListSectionItemBySection(w http.ResponseWriter, r *
 
 	writeJSON(w, http.StatusOK, sectionItems)
 }
-func (h *SectionItemHandler) DeleteSectionItem(w http.ResponseWriter, r *http.Request) {}
+
+func (h *SectionItemHandler) DeleteSectionItem(w http.ResponseWriter, r *http.Request) {
+	sectionId, err := idFromPath(r)
+
+	if err != nil {
+		sendError(w, http.StatusBadRequest, err.Error())
+		return
+	}
+
+	err = h.db.DeleteSectionItem(r.Context(), int64(sectionId))
+
+	if err != nil {
+		sendError(w, http.StatusInternalServerError, "Failed to delete section item")
+		return
+	}
+
+	writeJSON(w, http.StatusOK, nil)
+}

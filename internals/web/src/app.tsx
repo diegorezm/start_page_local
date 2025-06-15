@@ -8,11 +8,7 @@ import { useEffect } from "react";
 import { BookmarksContainer } from "./features/sections/components/bookmarks_container";
 
 import { Bell, BookMarked } from "lucide-react";
-
-import { UserConfigSidebar } from "./features/user_config/components/user_config_sidebar";
-import { CreateSectionDialog } from "./features/sections/components/create_section_dialog";
-import { UpdateSectionDialog } from "./features/sections/components/update_section_dialog";
-import { DeleteSectionDialog } from "./features/sections/components/delete_section_dialog";
+import RemindersContainer from "./features/reminders/components/reminders_container";
 
 export function App() {
   const { theme, wallpaper } = useUserConfigStore()
@@ -97,18 +93,11 @@ export function App() {
                   wallpaper !== null && "bg-surface text-on-surface"
                 )}
               >
-                <h3 className="text-lg font-semibold text-surface-on">Reminders Content</h3>
-                <p className="mt-2 text-surface-on/[0.8]">
-                  This is where your Reminders will appear. Keep track of your tasks and important dates.
-                </p>
+                <RemindersContainer />
               </TabPanel>
             </TabPanels>
           </TabGroup>
         </section>
-        <UserConfigSidebar />
-        <CreateSectionDialog />
-        <UpdateSectionDialog />
-        <DeleteSectionDialog />
       </main>
     </>
   );

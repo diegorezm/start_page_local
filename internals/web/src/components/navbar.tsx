@@ -5,10 +5,12 @@ import { Button } from "./ui/button";
 import { useEffect, useState } from "react";
 import { useOpenConfigSidebar } from "@/features/user_config/hooks/use-open-config-sidebar";
 import { useOpenCreateSectionDialog } from "@/features/sections/hooks/use-open-create-section-dialog";
+import { useOpenCreateSectionItemDialog } from "@/features/section_items/hooks/use-open-create-section-item-dialog";
 
 export function Navbar() {
   const { onOpen: onOpenConfigSidebar } = useOpenConfigSidebar()
   const { onOpen: onOpenCreateSectionDialog } = useOpenCreateSectionDialog()
+  const { onOpen: onOpenCreateSectionItemDialog } = useOpenCreateSectionItemDialog()
 
   const [clock, setClock] = useState(new Date());
 
@@ -51,7 +53,7 @@ export function Navbar() {
             </MenuItem>
 
             <MenuItem>
-              <Button variant="ghost" >
+              <Button variant="ghost" onClick={onOpenCreateSectionItemDialog}>
                 New bookmark
               </Button>
             </MenuItem>

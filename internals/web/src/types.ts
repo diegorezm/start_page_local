@@ -22,7 +22,6 @@ export const SectionItemSchema = Type.Object({
     maxLength: 150,
   }),
   url: Type.String({
-    format: 'uri',
     minLength: 5,
     maxLength: 2048,
   }),
