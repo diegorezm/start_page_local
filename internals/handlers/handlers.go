@@ -9,4 +9,10 @@ import (
 func RegisterAll(mux *http.ServeMux, s *store.Queries) {
 	sectionsHandler := NewSectionHandler(s)
 	sectionsHandler.RegisterAll(mux)
+
+	sectionItemsHandler := NewSectionItemHandler(s)
+	sectionItemsHandler.RegisterAll(mux)
+
+	pagesHandler := NewPagesHandler()
+	pagesHandler.RegisterAll(mux)
 }

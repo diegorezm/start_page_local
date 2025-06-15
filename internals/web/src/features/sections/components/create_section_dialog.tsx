@@ -1,17 +1,20 @@
 import { useOpenCreateSectionDialog } from "@/features/sections/hooks/use-open-create-section-dialog";
+
 import { Dialog } from "../../../components/ui/dialog";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { sectionService } from "@/features/sections/api/section_service";
+
+import { useQueryClient } from "@tanstack/react-query";
+
 import { useEffect } from "react";
+
 import { SectionForm } from "./sections_form";
+
+import { useCreateSectionMutation } from "../api/post";
 
 export function CreateSectionDialog() {
   const queryClient = useQueryClient()
   const { isOpen, onClose } = useOpenCreateSectionDialog()
 
-  const { mutate, isLoading, isError, isSuccess } = useMutation({
-    mutationFn: sectionService.createSection
-  })
+  const { mutate, isLoading, isError, isSuccess } = useCreateSectionMutation()
 
   useEffect(() => {
     if (!isLoading && !isError && isSuccess) {

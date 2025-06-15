@@ -1,15 +1,15 @@
 import { useQueryClient } from "@tanstack/react-query"
-import { useOpenDeleteSectionDialog } from "../hooks/use-open-delete-section-dialog"
 import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
 import { Dialog } from "@/components/ui/dialog"
-import { useDeleteSectionMutation } from "../api/delete"
+import { useDeleteSectionItemMutation } from "../api/delete"
+import { useOpenDeleteSectionItemDialog } from "../hooks/use-open-delete-section-item-dialog"
 
-export function DeleteSectionDialog() {
-  const { isOpen, section, onClose } = useOpenDeleteSectionDialog()
+export function DeleteSectionItemDialog() {
+  const { isOpen, item, onClose } = useOpenDeleteSectionItemDialog()
 
-  const { mutate, isLoading, isSuccess, error, isError } = useDeleteSectionMutation()
+  const { mutate, isLoading, isSuccess, error, isError } = useDeleteSectionItemMutation()
 
   const queryClient = useQueryClient()
 
@@ -23,18 +23,18 @@ export function DeleteSectionDialog() {
 
   }, [isLoading, isSuccess])
 
-  if (section === null) {
+  if (item === null) {
     return null
   }
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose} className="bg-background w-full max-w-lg text-foreground p-4 rounded-md" title="Are you sure you want to delete this section?">
+    <Dialog isOpen={isOpen} onClose={onClose} className="bg-background w-full max-w-lg text-foreground p-4 rounded-md" title="Are you sure you want to delete this bookmark?">
       <div className="flex gap-2 mt-4">
         <div>
           <Button
             type="button"
             onClick={() => {
-              mutate(section.id)
+              mutate(item.id)
             }}
             disabled={isLoading}
           >

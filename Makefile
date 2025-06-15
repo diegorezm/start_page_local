@@ -14,7 +14,10 @@ GOOSE_MIGRATION_DIR=./migrations
 # Default target
 all: run
 
-build:
+build-web: 
+	@cd ./internals/web/ && bun i && NODE_ENV=production bun run build
+
+build: build-web
 	@go build -o $(BINARY_PATH) $(MAIN_PATH)
 	@chmod +x $(BINARY_PATH)
 
