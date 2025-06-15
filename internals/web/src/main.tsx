@@ -4,11 +4,14 @@ import "@fontsource/titillium-web"
 import { createRoot } from "react-dom/client";
 import { StrictMode } from "react";
 import { App } from "./app";
+import { QueryProvider } from "./providers/query-provider";
 
 const elem = document.getElementById("root")!;
 const app = (
   <StrictMode>
-    <App />
+    <QueryProvider>
+      <App />
+    </QueryProvider>
   </StrictMode>
 );
 

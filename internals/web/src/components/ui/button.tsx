@@ -21,7 +21,7 @@ export function Button({
   return (
     <ButtonH
       className={cn(
-        "inline-flex items-center w-full justify-center rounded-lg hover:cursor-pointer transition-colors duration-200 gap-2",
+        "inline-flex items-center w-full justify-center rounded-lg hover:cursor-pointer transition-colors duration-300 gap-2 font-bold",
         "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
 
         variant === "primary" &&

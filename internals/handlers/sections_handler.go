@@ -79,10 +79,15 @@ func (h *SectionHandler) ListSections(w http.ResponseWriter, r *http.Request) {
 
 		for i, section := range sections {
 			items, err := h.db.ListSectionItemsBySection(context.Background(), section.ID)
+
 			if err != nil {
 				sendError(w, http.StatusInternalServerError, "Failed to list items for section")
 				log.Printf("ListSections: DB error when listing items: %v", err)
 				return
+			}
+
+			if items == nil {
+				items = []store.StartPageSectionItem{}
 			}
 
 			sectionsWithItems[i] = payloads.SectionWithItems{

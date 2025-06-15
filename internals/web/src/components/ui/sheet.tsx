@@ -1,11 +1,13 @@
 import { Dialog, DialogPanel, Transition, TransitionChild } from '@headlessui/react';
+import { X } from 'lucide-react';
 import { Fragment, type ReactNode } from 'react';
-import { cn } from 'src/lib/cn';
+import { cn } from '@/lib/cn';
 
 type Side = 'top' | 'bottom' | 'left' | 'right';
 
-interface SidebarProps {
+interface SheetProps {
   isOpen: boolean;
+  title?: string;
   onClose: () => void;
   side?: Side;
   children: ReactNode;
@@ -66,7 +68,7 @@ const getPositionClasses = (side: Side) => {
   }
 };
 
-export function Sidebar({ isOpen, onClose, side = 'left', children }: SidebarProps) {
+export function Sheet({ isOpen, onClose, side = 'left', children, title }: SheetProps) {
   const transition = getTransitionClasses(side);
   const position = getPositionClasses(side);
 
@@ -101,9 +103,20 @@ export function Sidebar({ isOpen, onClose, side = 'left', children }: SidebarPro
                   'absolute bg-background shadow-xl',
                   position,
                   'overflow-auto',
-                  'w-full lg:w-96'
+                  'w-full md:w-96',
+                  'p-4'
                 )}
               >
+                <div className='flex justify-between items-center text-center mb-6'>
+                  {title !== undefined && (
+                    <h1 className='text-lg font-bold'>{title}</h1>
+                  )}
+                  <div>
+                    <button onClick={onClose} className='hover:cursor-pointer'>
+                      <X size={20} />
+                    </button>
+                  </div>
+                </div>
                 {children}
               </DialogPanel>
             </TransitionChild>

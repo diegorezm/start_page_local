@@ -5,21 +5,26 @@
   "type": "module",
   "private": true,
   "scripts": {
-    "dev": "bun index.html",
-    "build": "bun build index.html --outdir ./dist --target browser --minify --external=react,react-dom",
-    "start": "NODE_ENV=production bun dist/index.html"
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
   },
   "devDependencies": {
     "@eslint/js": "^9.28.0",
+    "@tailwindcss/vite": "^4.1.10",
     "@types/bun": "latest",
+    "@types/node": "^24.0.1",
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
+    "@vitejs/plugin-react": "^4.5.2",
     "bun-plugin-tailwind": "^0.0.15",
     "eslint": "^9.28.0",
     "eslint-plugin-react": "^7.37.5",
     "globals": "^16.2.0",
     "tailwindcss": "^4",
-    "typescript-eslint": "^8.34.0"
+    "typescript-eslint": "^8.34.0",
+    "vite": "^6.3.5"
   },
   "peerDependencies": {
     "typescript": "^5"
@@ -27,12 +32,15 @@
   "dependencies": {
     "@fontsource/titillium-web": "^5.2.6",
     "@headlessui/react": "^2.2.4",
+    "@hookform/resolvers": "^5.1.1",
+    "@sinclair/typebox": "^0.34.35",
     "@tanstack/react-query": "4",
     "axios": "^1.9.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.514.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.57.0",
     "tailwind-merge": "^3.3.1",
     "zustand": "^5.0.5"
   }
