@@ -82,6 +82,11 @@
   --color-on-error: var(--on-error);
 }
 
+button:hover {
+  cursor: pointer;
+}
+
+
 html,
 body {
   font-family:

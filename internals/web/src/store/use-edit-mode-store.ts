@@ -2,12 +2,10 @@ import { create } from "zustand"
 
 interface IEditModeStore {
   isEditing: boolean
-  onEditing: VoidFunction
-  onStopEditing: VoidFunction
+  onToggleEditMode: VoidFunction
 }
 
-export const useEditModeStore = create<IEditModeStore>((set) => ({
+export const useEditModeStore = create<IEditModeStore>((set, get) => ({
   isEditing: false,
-  onEditing: () => set(s => ({ ...s, isEditing: true })),
-  onStopEditing: () => set(s => ({ ...s, isEditing: false }))
+  onToggleEditMode: () => set(s => ({ ...s, isEditing: !get().isEditing })),
 }))

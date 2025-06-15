@@ -3,9 +3,8 @@ import { SectionSchema, type Section } from "@/types"
 import { FormProvider, useForm, type SubmitHandler } from "react-hook-form"
 import { typeboxResolver } from "@hookform/resolvers/typebox"
 
-
-import { Button } from "../ui/button"
-import { ControlledInput } from "../ui/form"
+import { Button } from "@/components/ui/button"
+import { ControlledInput } from "@/components/ui/form"
 
 type Props = {
   onSubmit: SubmitHandler<Section>

@@ -1,19 +1,16 @@
+import { api } from '@/lib/api';
 
-import axios from 'axios';
 import type {
   Section,
   SectionWithItems,
   CreateSectionPayload,
   UpdateSectionPayload,
-} from '../types';
-
-const API_BASE_URL = 'http://localhost:8080/api';
+} from '@/types';
 
 export const sectionService = {
   getAllSectionsWithItems: async (): Promise<SectionWithItems[]> => {
     try {
-      const url = `${API_BASE_URL}/sections`;
-      const response = await axios.get(url, {
+      const response = await api.get("/sections", {
         params: { include_items: true },
       });
       return response.data;
@@ -25,8 +22,7 @@ export const sectionService = {
 
   getAllSections: async (): Promise<Section[]> => {
     try {
-      const url = `${API_BASE_URL}/sections`;
-      const response = await axios.get(url);
+      const response = await api.get("/sections");
       return response.data;
     } catch (error) {
       console.error('Error fetching sections:', error);
@@ -36,8 +32,7 @@ export const sectionService = {
 
   getSectionById: async (id: number): Promise<Section> => {
     try {
-      const url = `${API_BASE_URL}/sections/${id}`;
-      const response = await axios.get<Section>(url);
+      const response = await api.get<Section>(`/sections/${id}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching section ${id}:`, error);
@@ -47,8 +42,7 @@ export const sectionService = {
 
   createSection: async (payload: CreateSectionPayload): Promise<Section> => {
     try {
-      const url = `${API_BASE_URL}/sections`;
-      const response = await axios.post<Section>(url, payload);
+      const response = await api.post<Section>("/sections", payload);
       return response.data;
     } catch (error) {
       console.error('Error creating section:', error);
@@ -58,8 +52,7 @@ export const sectionService = {
 
   updateSection: async (id: number, payload: UpdateSectionPayload): Promise<Section> => {
     try {
-      const url = `${API_BASE_URL}/sections/${id}`;
-      const response = await axios.put<Section>(url, { ...payload, id });
+      const response = await api.put<Section>(`/sections/${id}`, { ...payload, id });
       return response.data;
     } catch (error) {
       console.error(`Error updating section ${id}:`, error);
@@ -69,8 +62,8 @@ export const sectionService = {
 
   deleteSection: async (id: number): Promise<void> => {
     try {
-      const url = `${API_BASE_URL}/sections/${id}`;
-      await axios.delete(url);
+      const url = `/sections/${id}`;
+      await api.delete(url);
     } catch (error) {
       console.error(`Error deleting section ${id}:`, error);
       throw error;

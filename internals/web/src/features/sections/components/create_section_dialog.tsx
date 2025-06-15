@@ -1,9 +1,9 @@
-import { useOpenCreateSectionDialog } from "@/hooks/use-open-create-section-dialog";
-import { Dialog } from "../ui/dialog";
-import { SectionForm } from "./sections_form";
+import { useOpenCreateSectionDialog } from "@/features/sections/hooks/use-open-create-section-dialog";
+import { Dialog } from "../../../components/ui/dialog";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { sectionService } from "@/services/section_service";
+import { sectionService } from "@/features/sections/api/section_service";
 import { useEffect } from "react";
+import { SectionForm } from "./sections_form";
 
 export function CreateSectionDialog() {
   const queryClient = useQueryClient()

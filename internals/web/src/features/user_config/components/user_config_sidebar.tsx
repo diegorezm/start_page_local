@@ -1,16 +1,17 @@
 import { useRef, type ChangeEvent, type FormEvent, type ReactNode } from "react";
 
-import { useOpenConfigSidebar } from "@/hooks/use-open-config-sidebar";
+import { useOpenConfigSidebar } from "@/features/user_config/hooks/use-open-config-sidebar";
 import { File } from "lucide-react";
 
-import { Sheet } from "./ui/sheet";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { Select } from "./ui/select";
+import { Sheet } from "@/components/ui/sheet";
 
-import { Field, Fieldset } from "@headlessui/react";
+import { Field, Fieldset, Switch } from "@headlessui/react";
 
-import { useUserConfigStore } from "@/store/use-user-config-store";
+import { useUserConfigStore } from "@/features/user_config/store/use-user-config-store";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
+import { useEditModeStore } from "@/store/use-edit-mode-store";
 
 export function UserConfigSidebar() {
   const { isOpen, onClose } = useOpenConfigSidebar()
@@ -18,6 +19,7 @@ export function UserConfigSidebar() {
     <Sheet isOpen={isOpen} onClose={onClose} side="right" title="Config">
       <ChangeWallpaperSection />
       <ChangeThemeSection />
+      <EditModeSwitchSection />
     </Sheet >
   )
 }
@@ -104,6 +106,22 @@ function ChangeThemeSection() {
         <option value="moonfly">Moonfly</option>
         <option value="ember-dark">Embder Dark</option>
       </Select>
+    </ConfigSidebarSection>
+  )
+}
+
+
+function EditModeSwitchSection() {
+  const { isEditing, onToggleEditMode } = useEditModeStore()
+  return (
+    <ConfigSidebarSection title="Edit Mode">
+      <Switch
+        checked={isEditing}
+        onChange={onToggleEditMode}
+        className="group inline-flex h-6 w-11 items-center rounded-full bg-transparent border-2 border-primary transition data-checked:bg-primary"
+      >
+        <span className="size-4 translate-x-1 rounded-full bg-primary transition group-data-checked:translate-x-6 group-data-checked:bg-on-primary" />
+      </Switch>
     </ConfigSidebarSection>
   )
 }

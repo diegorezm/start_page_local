@@ -1,13 +1,18 @@
 import { Navbar } from "./components/navbar";
+
 import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
-import { UserConfigSidebar } from "./components/user_config_sidebar";
-import { cn } from "./lib/cn";
-import { useUserConfigStore } from "./store/use-user-config-store";
+
+import { cn } from "./lib/cn"; import { useUserConfigStore } from "./features/user_config/store/use-user-config-store";
 import { useEffect } from "react";
-import { BookmarksContainer } from "./components/bookmarks_container";
+
+import { BookmarksContainer } from "./features/sections/components/bookmarks_container";
+
 import { Bell, BookMarked } from "lucide-react";
-import { SectionForm } from "./components/sections/sections_form";
-import { CreateSectionDialog } from "./components/sections/create_section_dialog";
+
+import { UserConfigSidebar } from "./features/user_config/components/user_config_sidebar";
+import { CreateSectionDialog } from "./features/sections/components/create_section_dialog";
+import { UpdateSectionDialog } from "./features/sections/components/update_section_dialog";
+import { DeleteSectionDialog } from "./features/sections/components/delete_section_dialog";
 
 export function App() {
   const { theme, wallpaper } = useUserConfigStore()
@@ -102,6 +107,8 @@ export function App() {
         </section>
         <UserConfigSidebar />
         <CreateSectionDialog />
+        <UpdateSectionDialog />
+        <DeleteSectionDialog />
       </main>
     </>
   );

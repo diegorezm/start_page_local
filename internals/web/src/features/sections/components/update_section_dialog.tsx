@@ -1,15 +1,18 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Dialog } from "../ui/dialog";
-import { SectionForm } from "./sections_form";
+import { Dialog } from "../../../components/ui/dialog";
 
-import { useOpenUpdateSectionDialog } from "@/hooks/use-open-update-section-dialog";
-import { sectionService } from "@/services/section_service";
+import { useOpenUpdateSectionDialog } from "@/features/sections/hooks/use-open-update-section-dialog";
+import { sectionService } from "@/features/sections/api/section_service";
 import type { UpdateSectionPayload } from "@/types";
 import { useEffect } from "react";
 
+import { SectionForm } from "./sections_form";
+
 export function UpdateSectionDialog() {
   const queryClient = useQueryClient()
+
   const { isOpen, section, onClose } = useOpenUpdateSectionDialog()
+
   const { mutate, isSuccess, isLoading, isError } = useMutation({
     mutationFn: async ({ id, payload }: { id: number, payload: UpdateSectionPayload }) => {
       return sectionService.updateSection(id, payload)

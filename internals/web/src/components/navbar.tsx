@@ -3,15 +3,12 @@ import { Bolt, Clock, Plus } from "lucide-react";
 import { Button } from "./ui/button";
 
 import { useEffect, useState } from "react";
-
-import { useOpenConfigSidebar } from "@/hooks/use-open-config-sidebar";
-import { useOpenCreateSectionDialog } from "@/hooks/use-open-create-section-dialog";
-import { useOpenCreateSectionItemDialog } from "@/hooks/use-open-create-section-item-dialog";
+import { useOpenConfigSidebar } from "@/features/user_config/hooks/use-open-config-sidebar";
+import { useOpenCreateSectionDialog } from "@/features/sections/hooks/use-open-create-section-dialog";
 
 export function Navbar() {
   const { onOpen: onOpenConfigSidebar } = useOpenConfigSidebar()
   const { onOpen: onOpenCreateSectionDialog } = useOpenCreateSectionDialog()
-  const { onOpen: onOpenCreateSectionItemDialog } = useOpenCreateSectionItemDialog()
 
   const [clock, setClock] = useState(new Date());
 
@@ -54,7 +51,7 @@ export function Navbar() {
             </MenuItem>
 
             <MenuItem>
-              <Button variant="ghost" onClick={onOpenCreateSectionItemDialog}>
+              <Button variant="ghost" >
                 New bookmark
               </Button>
             </MenuItem>
