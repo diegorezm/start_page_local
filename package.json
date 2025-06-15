@@ -1,24 +1,10 @@
 {
-  "name": "start_page",
-  "module": "index.ts",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "tailwind-watch": "bunx @tailwindcss/cli -i ./internals/web/static/css/input.css -o ./internals/web/static/css/output.css --watch",
-    "tailwind-build": "bunx @tailwindcss/cli -i ./internals/web/static/css/input.css -o ./internals/web/static/css/output.css --minify"
+  "dependencies": {
+    "lucide-react": "^0.514.0",
+    "zustand": "^5.0.5"
   },
   "devDependencies": {
-    "@eslint/js": "^9.28.0",
-    "@types/bun": "latest",
-    "eslint": "^9.28.0",
-    "globals": "^16.2.0",
-    "tailwindcss": "^4.1.8"
-  },
-  "peerDependencies": {
-    "typescript": "^5"
-  },
-  "dependencies": {
-    "@imacrayon/alpine-ajax": "^0.12.2",
-    "alpinejs": "^3.14.9"
+    "@types/react": "^19.1.7",
+    "@types/react-dom": "^19.1.6"
   }
 }
