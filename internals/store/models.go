@@ -12,6 +12,7 @@ type StartPageReminder struct {
 	ID        int64     `json:"id"`
 	Text      string    `json:"text"`
 	Completed bool      `json:"completed"`
+	DueDate   time.Time `json:"due_date"`
 	CreatedAt time.Time `json:"created_at"`
 }
 

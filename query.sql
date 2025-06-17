@@ -50,8 +50,8 @@ WHERE id = ?;
 ---
 
 -- name: CreateReminder :one
-INSERT INTO start_page_reminders (text)
-VALUES (?)
+INSERT INTO start_page_reminders (text, due_date)
+VALUES (?, ?)
 RETURNING *;
 
 -- name: GetReminder :one
@@ -74,15 +74,15 @@ WHERE id = ?;
 
 -- name: GetTodaysReminders :many
 SELECT * FROM start_page_reminders
-WHERE created_at >= date('now', 'start of day') AND created_at < date('now', 'start of day', '+1 day')
+WHERE due_date >= date('now', 'start of day') AND due_date < date('now', 'start of day', '+1 day')
 ORDER BY created_at DESC;
 
 -- name: GetRemindersForDate :many
 SELECT * FROM start_page_reminders
-WHERE created_at >= date(?) AND created_at < date(?, '+1 day')
+WHERE due_date >= date(?) AND due_date < date(?, '+1 day')
 ORDER BY created_at DESC;
 
 -- name: GetRemindersBetweenDates :many
 SELECT * FROM start_page_reminders
-WHERE created_at >= date(?) AND created_at <= date(?, '+1 day', '-1 second')
+WHERE due_date >= date(?) AND due_date <= date(?, '+1 day', '-1 second')
 ORDER BY created_at DESC;

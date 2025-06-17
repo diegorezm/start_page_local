@@ -87,7 +87,7 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	port := flag.Int("port", 8080, "port to listen on")
+	port := flag.Int("port", 5909, "port to listen on")
 
 	flag.Parse()
 

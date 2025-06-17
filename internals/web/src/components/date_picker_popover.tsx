@@ -30,11 +30,11 @@ export function DatePickerPopover({
 }: DatePickerInputProps) {
 
   const getRelativeDate = (date: Date): string => {
-    const today = new Date();
-    const tomorrow = addDays(today, 1);
+    // const today = new Date();
+    // const tomorrow = addDays(today, 1);
 
-    if (isPast(date) && !isToday(date)) return format(date, 'MMM do, yyyy') + " (Past)";
-    if (date.getTime() > tomorrow.getTime()) return format(date, 'MMM do, yyyy');
+    // if (isPast(date) && !isToday(date)) return format(date, 'MMM do, yyyy') + " (Past)";
+    // if (date.getTime() > tomorrow.getTime()) return format(date, 'MMM do, yyyy');
 
     return format(date, 'MMM do, yyyy');
   };

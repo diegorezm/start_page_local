@@ -7,23 +7,30 @@ package store
 
 import (
 	"context"
+	"time"
 )
 
 const createReminder = `-- name: CreateReminder :one
 
-INSERT INTO start_page_reminders (text)
-VALUES (?)
-RETURNING id, text, completed, created_at
+INSERT INTO start_page_reminders (text, due_date)
+VALUES (?, ?)
+RETURNING id, text, completed, due_date, created_at
 `
 
+type CreateReminderParams struct {
+	Text    string    `json:"text"`
+	DueDate time.Time `json:"due_date"`
+}
+
 // -
-func (q *Queries) CreateReminder(ctx context.Context, text string) (StartPageReminder, error) {
-	row := q.db.QueryRowContext(ctx, createReminder, text)
+func (q *Queries) CreateReminder(ctx context.Context, arg CreateReminderParams) (StartPageReminder, error) {
+	row := q.db.QueryRowContext(ctx, createReminder, arg.Text, arg.DueDate)
 	var i StartPageReminder
 	err := row.Scan(
 		&i.ID,
 		&i.Text,
 		&i.Completed,
+		&i.DueDate,
 		&i.CreatedAt,
 	)
 	return i, err
@@ -104,7 +111,7 @@ func (q *Queries) DeleteSectionItem(ctx context.Context, id int64) error {
 }
 
 const getReminder = `-- name: GetReminder :one
-SELECT id, text, completed, created_at FROM start_page_reminders
+SELECT id, text, completed, due_date, created_at FROM start_page_reminders
 WHERE id = ? LIMIT 1
 `
 
@@ -115,14 +122,15 @@ func (q *Queries) GetReminder(ctx context.Context, id int64) (StartPageReminder,
 		&i.ID,
 		&i.Text,
 		&i.Completed,
+		&i.DueDate,
 		&i.CreatedAt,
 	)
 	return i, err
 }
 
 const getRemindersBetweenDates = `-- name: GetRemindersBetweenDates :many
-SELECT id, text, completed, created_at FROM start_page_reminders
-WHERE created_at >= date(?) AND created_at <= date(?, '+1 day', '-1 second')
+SELECT id, text, completed, due_date, created_at FROM start_page_reminders
+WHERE due_date >= date(?) AND due_date <= date(?, '+1 day', '-1 second')
 ORDER BY created_at DESC
 `
 
@@ -144,6 +152,7 @@ func (q *Queries) GetRemindersBetweenDates(ctx context.Context, arg GetReminders
 			&i.ID,
 			&i.Text,
 			&i.Completed,
+			&i.DueDate,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -160,8 +169,8 @@ func (q *Queries) GetRemindersBetweenDates(ctx context.Context, arg GetReminders
 }
 
 const getRemindersForDate = `-- name: GetRemindersForDate :many
-SELECT id, text, completed, created_at FROM start_page_reminders
-WHERE created_at >= date(?) AND created_at < date(?, '+1 day')
+SELECT id, text, completed, due_date, created_at FROM start_page_reminders
+WHERE due_date >= date(?) AND due_date < date(?, '+1 day')
 ORDER BY created_at DESC
 `
 
@@ -183,6 +192,7 @@ func (q *Queries) GetRemindersForDate(ctx context.Context, arg GetRemindersForDa
 			&i.ID,
 			&i.Text,
 			&i.Completed,
+			&i.DueDate,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -228,8 +238,8 @@ func (q *Queries) GetSectionItem(ctx context.Context, id int64) (StartPageSectio
 }
 
 const getTodaysReminders = `-- name: GetTodaysReminders :many
-SELECT id, text, completed, created_at FROM start_page_reminders
-WHERE created_at >= date('now', 'start of day') AND created_at < date('now', 'start of day', '+1 day')
+SELECT id, text, completed, due_date, created_at FROM start_page_reminders
+WHERE due_date >= date('now', 'start of day') AND due_date < date('now', 'start of day', '+1 day')
 ORDER BY created_at DESC
 `
 
@@ -246,6 +256,7 @@ func (q *Queries) GetTodaysReminders(ctx context.Context) ([]StartPageReminder, 
 			&i.ID,
 			&i.Text,
 			&i.Completed,
+			&i.DueDate,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -262,7 +273,7 @@ func (q *Queries) GetTodaysReminders(ctx context.Context) ([]StartPageReminder, 
 }
 
 const listReminders = `-- name: ListReminders :many
-SELECT id, text, completed, created_at FROM start_page_reminders
+SELECT id, text, completed, due_date, created_at FROM start_page_reminders
 ORDER BY created_at DESC
 `
 
@@ -279,6 +290,7 @@ func (q *Queries) ListReminders(ctx context.Context) ([]StartPageReminder, error
 			&i.ID,
 			&i.Text,
 			&i.Completed,
+			&i.DueDate,
 			&i.CreatedAt,
 		); err != nil {
 			return nil, err
@@ -360,7 +372,7 @@ const updateReminder = `-- name: UpdateReminder :one
 UPDATE start_page_reminders
 SET text = ?, completed = ?
 WHERE id = ?
-RETURNING id, text, completed, created_at
+RETURNING id, text, completed, due_date, created_at
 `
 
 type UpdateReminderParams struct {
@@ -376,6 +388,7 @@ func (q *Queries) UpdateReminder(ctx context.Context, arg UpdateReminderParams) 
 		&i.ID,
 		&i.Text,
 		&i.Completed,
+		&i.DueDate,
 		&i.CreatedAt,
 	)
 	return i, err

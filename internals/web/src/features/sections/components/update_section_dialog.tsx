@@ -9,15 +9,12 @@ import { SectionForm } from "./sections_form";
 import { useUpdateSectionMutation } from "../api/put";
 
 export function UpdateSectionDialog() {
-  const queryClient = useQueryClient()
-
   const { isOpen, section, onClose } = useOpenUpdateSectionDialog()
 
   const { mutate, isSuccess, isLoading, isError } = useUpdateSectionMutation()
 
   useEffect(() => {
-    if (!isLoading && !isError && isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["bookmarks"] }).catch(e => console.error(e))
+    if (isSuccess) {
       onClose()
     }
   }, [isLoading, onClose, isSuccess])

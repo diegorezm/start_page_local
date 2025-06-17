@@ -3,20 +3,16 @@ import { useEffect } from "react";
 import { Dialog } from "@/components/ui/dialog";
 import { SectionItemsForm } from "./section_items_form";
 
-import { useQueryClient } from "@tanstack/react-query";
-
 import { useOpenUpdateSectionItemDialog } from "../hooks/use-open-update-section-item-dialog";
 import { useUpdateSectionItemMutation } from "../api/put";
 
 export function UpdateSectionItemDialog() {
-  const queryClient = useQueryClient()
   const { isOpen, onClose, item } = useOpenUpdateSectionItemDialog()
 
   const { mutate, isLoading, isError, isSuccess } = useUpdateSectionItemMutation()
 
   useEffect(() => {
-    if (!isLoading && !isError && isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["bookmarks"] }).catch(e => console.error(e))
+    if (isSuccess) {
       onClose()
     }
   }, [isLoading, onClose, isSuccess])

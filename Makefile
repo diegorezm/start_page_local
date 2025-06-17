@@ -9,33 +9,24 @@ DB_PATH=$(HOME_DIR)/.local/share/start_page/start_page.db # Removed duplicate
 GOOSE_DBSTRING=file:$(DB_PATH)?cache=shared
 GOOSE_MIGRATION_DIR=./migrations
 
-.PHONY: build run server tailwind-watch templ dev clean migrate_up migrate_down migrate_create
-
-# Default target
-all: run
+.PHONY: clean
 
 build-web: 
 	@cd ./internals/web/ && bun i && NODE_ENV=production bun run build
 
-build: build-web
+build-server:
 	@go build -o $(BINARY_PATH) $(MAIN_PATH)
 	@chmod +x $(BINARY_PATH)
 
-run: build
-	@$(BINARY_PATH) 
+build-prod: build-web build-server
 
-server:
-	@air \
-	--build.cmd "make build" \
-	--build.bin $(BINARY_PATH) \
-	--build.delay "100" \
-	--build.exclude_dir "node_modules" \
-	--build.include_ext "go" \
-	--build.stop_on_error "false" \
-	--misc.clean_on_exit true
+run: build-server
+	@$(BINARY_PATH) 
+install: build-prod
+	@mv $(BINARY_PATH) $(HOME_DIR)/.local/bin/start_page
 
 clean:
-	@rm -f $(BINARY_PATH)
+	@rm -f $(BINARY_PATH) 
 	@rm -rf $(dir $(DB_PATH)) 
 
 # up:

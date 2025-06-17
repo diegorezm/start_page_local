@@ -13,6 +13,9 @@ func RegisterAll(mux *http.ServeMux, s *store.Queries) {
 	sectionItemsHandler := NewSectionItemHandler(s)
 	sectionItemsHandler.RegisterAll(mux)
 
+	remindersHandler := NewRemindersHandler(s)
+	remindersHandler.RegisterAll(mux)
+
 	pagesHandler := NewPagesHandler()
 	pagesHandler.RegisterAll(mux)
 }

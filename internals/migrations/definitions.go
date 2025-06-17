@@ -54,6 +54,7 @@ func RegisterAll(m *Migrations) {
 					id INTEGER PRIMARY KEY AUTOINCREMENT,
 					text VARCHAR(2048) NOT NULL,
 					completed BOOLEAN NOT NULL DEFAULT 0,
+  				due_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 					created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 				)
 			`)

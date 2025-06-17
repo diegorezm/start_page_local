@@ -29,6 +29,7 @@ export const SectionItemSchema = Type.Object({
     minimum: 0,
   }),
 });
+
 export type SectionItem = Static<typeof SectionItemSchema>;
 
 export const SectionWithItemsSchema = Type.Object({
@@ -46,6 +47,8 @@ export const ReminderSchema = Type.Object({
     maxLength: 500,
   }),
   completed: Type.Boolean(),
+  due_date: Type.Date(),
+  created_at: Type.Date()
 });
 export type Reminder = Static<typeof ReminderSchema>;
 
@@ -64,3 +67,9 @@ export type UpdateSectionPayload = Static<typeof UpdateSectionPayloadSchema>;
 // --- UpdateSectionItemPayload ---
 export const UpdateSectionItemPayloadSchema = Type.Partial(SectionItemSchema);
 export type UpdateSectionItemPayload = Static<typeof UpdateSectionItemPayloadSchema>;
+
+export const CreateReminderPayloadSchema = Type.Omit(ReminderSchema, ['id', 'created_at', 'completed']);
+export type CreateReminderPayload = Static<typeof CreateReminderPayloadSchema>;
+
+export const UpdateReminderPayloadSchema = Type.Partial(ReminderSchema);
+export type UpdateReminderPayload = Static<typeof UpdateReminderPayloadSchema>;

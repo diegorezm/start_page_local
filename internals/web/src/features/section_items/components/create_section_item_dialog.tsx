@@ -1,6 +1,5 @@
 
 import { useEffect } from "react";
-import { useQueryClient } from "@tanstack/react-query";
 
 import { SectionItemsForm } from "./section_items_form";
 import { Dialog } from "@/components/ui/dialog";
@@ -10,14 +9,12 @@ import { useOpenCreateSectionItemDialog } from "../hooks/use-open-create-section
 import { useCreateSectionItemMutation } from "../api/post";
 
 export function CreateSectionItemDialog() {
-  const queryClient = useQueryClient()
   const { isOpen, onClose } = useOpenCreateSectionItemDialog()
 
   const { mutate, isLoading, isError, isSuccess } = useCreateSectionItemMutation()
 
   useEffect(() => {
     if (!isLoading && !isError && isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["bookmarks"] }).catch(e => console.error(e))
       onClose()
     }
   }, [isLoading, onClose, isSuccess])

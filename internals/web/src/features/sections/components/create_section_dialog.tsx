@@ -1,24 +1,18 @@
-import { useOpenCreateSectionDialog } from "@/features/sections/hooks/use-open-create-section-dialog";
-
-import { Dialog } from "../../../components/ui/dialog";
-
-import { useQueryClient } from "@tanstack/react-query";
-
 import { useEffect } from "react";
 
 import { SectionForm } from "./sections_form";
+import { Dialog } from "../../../components/ui/dialog";
 
 import { useCreateSectionMutation } from "../api/post";
+import { useOpenCreateSectionDialog } from "@/features/sections/hooks/use-open-create-section-dialog";
 
 export function CreateSectionDialog() {
-  const queryClient = useQueryClient()
   const { isOpen, onClose } = useOpenCreateSectionDialog()
 
   const { mutate, isLoading, isError, isSuccess } = useCreateSectionMutation()
 
   useEffect(() => {
     if (!isLoading && !isError && isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ["bookmarks"] }).catch(e => console.error(e))
       onClose()
     }
   }, [isLoading, onClose, isSuccess])

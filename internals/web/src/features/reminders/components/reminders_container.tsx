@@ -1,30 +1,19 @@
-import { format, isToday } from "date-fns";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { DatePickerPopover } from "@/components/date_picker_popover";
 import { useReminderDateFilter } from "../hooks/use-reminders-date-filter";
+import { getRelativeDate } from "@/lib/get-relative-date";
+import { RemindersForm } from "./reminders_form";
+import { useGetReminders } from "../api/get";
+import { cn } from "@/lib/cn";
+import { ReminderContainer } from "./reminder_container";
 
 export default function RemindersContainer() {
   const { date, setDate } = useReminderDateFilter()
-
-  const getRelativeDate = (date: Date) => {
-    return format(date, 'MMM do, yyyy');
-  };
+  const { data, isLoading, isError, isSuccess } = useGetReminders(date)
 
   return (
-    <div className="flex flex-col gap-6 px-4 py-2">
-      <nav className="flex justify-between">
-        <form className="flex flex-col sm:flex-row gap-2 w-2/3 items-end justify-center">
-          <div className="flex-grow">
-            <Input placeholder={`Add a reminder on ${getRelativeDate(date)}`} />
-          </div>
-          <div>
-            <Button type="submit">
-              Add Reminder
-            </Button>
-          </div>
-        </form>
-
+    <div className="flex flex-col gap-6">
+      <nav className="flex justify-between px-4 py-2">
+        <RemindersForm />
 
         <div >
           <DatePickerPopover
@@ -41,12 +30,30 @@ export default function RemindersContainer() {
 
       </nav>
 
-      {/* Reminder List Display */}
-      <div >
+      <div className="max-h-[580px] overflow-y-auto overflow-x-hidden px-4">
         <h2 className="text-xl font-semibold text-foreground mb-4">
           Reminders {date ? `for ${getRelativeDate(date)}` : "All Dates"}
         </h2>
-        <p className="text-foreground/70 italic">Reminder list will appear here once logic is re-added.</p>
+        {isLoading && (
+          <p>Loading reminders...</p>
+        )}
+
+        {isError && (
+          <p>Error loading reminders.</p>
+        )}
+
+        {isSuccess && (
+          <>
+            {data?.length === 0 || data === null && (
+              <p>No reminders for this date!</p>
+            )}
+            <ul className="space-y-4">
+              {data?.map((reminder) => (
+                <ReminderContainer reminder={reminder} key={reminder.id} />
+              ))}
+            </ul>
+          </>
+        )}
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query"
 import { useEffect } from "react"
 
 import { Button } from "@/components/ui/button"
@@ -9,15 +8,10 @@ import { useOpenDeleteSectionItemDialog } from "../hooks/use-open-delete-section
 export function DeleteSectionItemDialog() {
   const { isOpen, item, onClose } = useOpenDeleteSectionItemDialog()
 
-  const { mutate, isLoading, isSuccess, error, isError } = useDeleteSectionItemMutation()
-
-  const queryClient = useQueryClient()
+  const { mutate, isLoading, isSuccess, isError } = useDeleteSectionItemMutation()
 
   useEffect(() => {
-    if (isError) {
-      console.error(error)
-    } else if (!isLoading && isSuccess) {
-      queryClient.invalidateQueries({ queryKey: ['bookmarks'] }).catch(e => console.error(e))
+    if (isSuccess) {
       onClose()
     }
 
@@ -54,6 +48,9 @@ export function DeleteSectionItemDialog() {
             Cancel
           </Button>
         </div>
+        {isError && (
+          <p className="text-sm text-error text-medium">Something went wrong!</p>
+        )}
       </div>
     </Dialog>
   )

@@ -1,15 +1,15 @@
 import { api } from "@/lib/api"
 import type { CreateSectionPayload } from "@/types"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 
 export const useCreateSectionMutation = () => {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (data: CreateSectionPayload) => {
       await api.post("/sections", data)
     },
-    onError: (e: Error) => {
-      console.error(`Error creating section: ${e}`)
-      return e
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['bookmarks', 'sections'] })
     },
   })
 }
