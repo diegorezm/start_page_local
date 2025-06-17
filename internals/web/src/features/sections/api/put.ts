@@ -12,7 +12,8 @@ export const useUpdateSectionMutation = () => {
       return response.data;
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['bookmarks', 'sections'] })
+      await queryClient.invalidateQueries({ queryKey: ['bookmarks'] })
+      await queryClient.invalidateQueries({ queryKey: ['sections'] })
     },
     onError: (e: Error) => {
       console.error("Failed to update section")

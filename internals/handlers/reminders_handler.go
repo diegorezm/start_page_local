@@ -32,7 +32,7 @@ func (h *RemindersHandler) ListReminders(w http.ResponseWriter, r *http.Request)
 	}
 	reminders, err := h.db.GetRemindersForDate(r.Context(), store.GetRemindersForDateParams{
 		Date:   date,
-		Date_2: date.AddDate(0, 0, 1),
+		Date_2: date,
 	})
 	if err != nil {
 		fmt.Println(err)

@@ -9,7 +9,8 @@ export const useCreateSectionMutation = () => {
       await api.post("/sections", data)
     },
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ['bookmarks', 'sections'] })
+      await queryClient.invalidateQueries({ queryKey: ['bookmarks'] })
+      await queryClient.invalidateQueries({ queryKey: ['sections'] })
     },
   })
 }
